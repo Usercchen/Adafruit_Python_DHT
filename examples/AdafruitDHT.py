@@ -23,6 +23,12 @@ import sys
 
 import Adafruit_DHT
 
+import requests
+
+token = 'eyCVVfj0PVp4PYGpPe3d8eGRqgm3wa3BAehGnISpqKw'
+message = '仁翔好帥aka銘傳羅志祥 雞胗地瓜好醜! '
+headers = {"Authorization": "Bearer " + token,}
+payload = {'message': message }
 
 # Parse command line parameters.
 sensor_args = { '11': Adafruit_DHT.DHT11,
@@ -47,10 +53,14 @@ else:
 # the results will be null (because Linux can't
 # guarantee the timing of calls to read the sensor).
 # If this happens try again!
-while 1: 
+while 1:
     humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
     if humidity is not None and temperature is not None:
         print('Temp={0:0.1f}*  Humidity={1:0.1f}%'.format(temperature, humidity))
+        requests.post("https://notify-api.line.me/api/notify", headers = headers, params = payload)
     else:
         print('Failed to get reading. Try again!')
         sys.exit(1)
+
+
+
